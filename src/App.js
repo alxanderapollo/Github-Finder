@@ -4,8 +4,8 @@ import Navbar from './components/layout/Navbar';
 function App() {
   return (
     <div>
-      {/* passing title as a prop */}
-        <Navbar title= "Github Finder"/>
+      {/* passing title as a prop and custom icon*/}
+        <Navbar/>
     </div>
   );
 }
