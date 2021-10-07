@@ -1,13 +1,15 @@
 import './App.css';
 import Navbar from './components/layout/Navbar';
-import UserItem from './components/users/UserItem';
+import Users from './components/users/Users';
 
 function App() {
   return (
     <div>
       {/* passing title as a prop and custom icon*/}
         <Navbar/>
-        <UserItem/>
+        <div className="container">
+          <Users/>
+        </div>
     </div>
   );
 }
