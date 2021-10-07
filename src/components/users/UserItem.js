@@ -4,7 +4,7 @@ import React from "react";
 import PropTypes from "prop-types";
 //destructering the props instead of having this --->const {login,avatar_Url,html_url} = props.user;
 // we can do the below instead
-const UserItem = ({ user: { login, avatar_Url, html_url } }) => {
+const UserItem = ({ user: { login, avatar_url, html_url } }) => {
   //states are basically objects, and require a constructor to be initialized
   // state = {
   //     id:'id',
@@ -18,7 +18,7 @@ const UserItem = ({ user: { login, avatar_Url, html_url } }) => {
   return (
     <div className="card text-center">
       <img
-        src={avatar_Url}
+        src={avatar_url}
         alt=""
         className="round-img"
         style={{ width: "60px" }}
