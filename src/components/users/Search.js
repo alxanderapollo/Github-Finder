@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-
+import PropTypes from 'prop-types'
 export class search extends Component {
   //this state will hold the text, that will be inputted by the user
   state = {
