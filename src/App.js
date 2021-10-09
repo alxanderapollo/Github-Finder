@@ -3,6 +3,8 @@ import Navbar from "./components/layout/Navbar";
 import Users from "./components/users/Users";
 import axios from "axios";
 import React from "react";
+import Search from "./components/users/Search";
+
 
 class App extends React.Component {
   state = {
@@ -28,7 +30,7 @@ class App extends React.Component {
     //want to put the users that come back from res.data into our state
     //within this app component
 
-    //now that we have all our data and the data is no longer loading
+    //now that we have all our data and the data is no lo nger loading
     //using setState, reset the loading to false, and fill the users array with the data
     this.setState({ users: res.data, loading: false });
     // console.log(res.data)
@@ -39,6 +41,7 @@ class App extends React.Component {
         {/* passing title as a prop and custom icon*/}
         <Navbar />
         <div className="container">
+          <Search/>
           <Users loading={this.state.loading} users={this.state.users} />
         </div>
       </div>
