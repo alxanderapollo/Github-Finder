@@ -5,6 +5,10 @@ export class search extends Component {
   state = {
     text: "",
   };
+
+  static propTypes = {
+    searchUsers: PropTypes.func.isRequired
+  }
   //updates our piece of state that was entered inside of the search box
   //key interpolation
   //since name is a feild in the form, it takes name
@@ -18,7 +22,11 @@ export class search extends Component {
   //for when the user submits
   onSubmit = (e) => {
     e.preventDefault();
-    console.log(this.state.text);
+    // console.log(this.state.text);
+    //function to pass up the query to app component
+    this.props.searchUsers(this.state.text);
+    //wipe the state with the the current query
+    this.setState({text: ''});
   };
   
   render() {
