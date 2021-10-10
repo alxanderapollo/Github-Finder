@@ -1,10 +1,13 @@
 import "./App.css";
+//going to be used to make click links render in a new tab
+import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import Navbar from "./components/layout/Navbar";
 import Users from "./components/users/Users";
 import axios from "axios";
-import React from "react";
+import React, {Fragment} from "react";
 import Search from "./components/users/Search";
-import Alert from './components/layout/Alert';
+import About from './components/pages/About'
+import Alert from "./components/layout/Alert";
 //1. once the form is submitted it calls onSubmit() in the component
 //.2 onsubmit calls on a prop function called search users (inside of the app Component) and passes in the text
 //3. app js calls the functions search users which is inside of the app js
@@ -14,7 +17,7 @@ class App extends React.Component {
   state = {
     users: [], //stores all the users that come back from res.date --> axios
     loading: false, //loading will be to tell the user when the data is coming in, so will be using a spinner in place that says "loading..," until the data comes in
-    alert: null
+    alert: null,
   };
 
   //life cycle method
@@ -66,33 +69,47 @@ class App extends React.Component {
 
   //setting setAlert
   setAlert = (msg, type) => {
-    this.setState({alert:{msg, type}})
+    this.setState({ alert: { msg, type } });
     //time out the alert otherwise it will stick to the screen indefinitly
-    setTimeout(() => this.setState({alert:null}), 5000);
-  }
+    setTimeout(() => this.setState({ alert: null }), 5000);
+  };
   render() {
-    //destructure state 
-    const {users, loading} = this.state;
+    //destructure state
+    const { users, loading } = this.state;
     return (
-      <div>
-        {/* passing title as a prop and custom icon*/}
-        <Navbar />
-        <div className="container">
-          <Alert alert={this.state.alert}/>
-
-          {/* adding props so it can pass values back up rather than down, AKA prop drilling */}
-          {/* Clear users is also being sent up from search into app */}
-          {/* Want to conditionally render the clear button, only if there are users on the screen otherwise not, */}
-          {/* show Clear is conditonal prop passed that checks for that */}
-          <Search
-            searchUsers={this.searchUsers}
-            clearUsers={this.clearUsers}
-            showClear={users.length > 0 ? true : false}
-            setAlert = {this.setAlert}
-          />
-          <Users loading={loading} users={users} />
+      <Router>
+        <div>
+          {/* passing title as a prop and custom icon*/}
+          <Navbar />
+          <div className="container">
+            <Alert alert={this.state.alert} />
+            {/* routes are wrapped around a switch so that it shows one at a time */}
+            <Switch>
+              <Route
+                exact
+                path="/"
+                render={(props) => (
+                  <Fragment>
+                    {/* adding props so it can pass values back up rather than down, AKA prop drilling */}
+                    {/* Clear users is also being sent up from search into app */}
+                    {/* Want to conditionally render the clear button, only if there are users on the screen otherwise not, */}
+                    {/* show Clear is conditonal prop passed that checks for that */}
+                    <Search
+                      searchUsers={this.searchUsers}
+                      clearUsers={this.clearUsers}
+                      showClear={users.length > 0 ? true : false}
+                      setAlert={this.setAlert}
+                    />
+                    <Users loading={loading} users={users} />
+                  </Fragment>
+                )}
+              />
+              {/* sinlge component that will route to the about page */}
+              <Route exact path ='/about'component={About}/>
+            </Switch>
+          </div>
         </div>
-      </div>
+      </Router>
     );
   }
 }
