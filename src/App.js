@@ -4,7 +4,7 @@ import Users from "./components/users/Users";
 import axios from "axios";
 import React from "react";
 import Search from "./components/users/Search";
-
+import Alert from './components/layout/Alert';
 //1. once the form is submitted it calls onSubmit() in the component
 //.2 onsubmit calls on a prop function called search users (inside of the app Component) and passes in the text
 //3. app js calls the functions search users which is inside of the app js
@@ -14,6 +14,7 @@ class App extends React.Component {
   state = {
     users: [], //stores all the users that come back from res.date --> axios
     loading: false, //loading will be to tell the user when the data is coming in, so will be using a spinner in place that says "loading..," until the data comes in
+    alert: null
   };
 
   //life cycle method
@@ -62,6 +63,13 @@ class App extends React.Component {
   //Clear users from state
   //empties the array of passed users and resets loading to false
   clearUsers = () => this.setState({ users: [], loading: false });
+
+  //setting setAlert
+  setAlert = (msg, type) => {
+    this.setState({alert:{msg, type}})
+    //time out the alert otherwise it will stick to the screen indefinitly
+    setTimeout(() => this.setState({alert:null}), 5000);
+  }
   render() {
     //destructure state 
     const {users, loading} = this.state;
@@ -70,6 +78,8 @@ class App extends React.Component {
         {/* passing title as a prop and custom icon*/}
         <Navbar />
         <div className="container">
+          <Alert alert={this.state.alert}/>
+
           {/* adding props so it can pass values back up rather than down, AKA prop drilling */}
           {/* Clear users is also being sent up from search into app */}
           {/* Want to conditionally render the clear button, only if there are users on the screen otherwise not, */}
@@ -78,6 +88,7 @@ class App extends React.Component {
             searchUsers={this.searchUsers}
             clearUsers={this.clearUsers}
             showClear={users.length > 0 ? true : false}
+            setAlert = {this.setAlert}
           />
           <Users loading={loading} users={users} />
         </div>

@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-export class search extends Component {
+export class Search extends Component {
   //this state will hold the text, that will be inputted by the user
   state = {
     text: "",
@@ -10,6 +10,7 @@ export class search extends Component {
     searchUsers: PropTypes.func.isRequired,
     clearUsers: PropTypes.func.isRequired,
     showClear: PropTypes.bool.isRequired,
+    setAlert: PropTypes.func.isRequired
   };
   //updates our piece of state that was entered inside of the search box
   //key interpolation
@@ -24,15 +25,21 @@ export class search extends Component {
   onSubmit = (e) => {
     e.preventDefault();
     // console.log(this.state.text);
-    //function to pass up the query to app component
-    this.props.searchUsers(this.state.text);
-    //wipe the state with the the current query
-    this.setState({ text: "" });
+
+    if (this.state.text === '')
+      //alert message - and type warning which could be danger, success or red
+      this.props.setAlert("Please enter something", "light");
+    else {
+      //function to pass up the query to app component
+      this.props.searchUsers(this.state.text);
+      //wipe the state with the the current query
+      this.setState({ text: "" });
+    }
   };
 
   render() {
     // deconstruct the props
-    const {clearUsers, showClear } = this.props;
+    const { clearUsers, showClear } = this.props;
     return (
       <div>
         <form onSubmit={this.onSubmit} className="form">
@@ -47,17 +54,14 @@ export class search extends Component {
         </form>
         {/* showClear is prop that is passed as a bool, if its true, then render the button */}
         {/* otherwise dont render this is passed from the app component class */}
-        {showClear && 
-          <button
-            className="btn btn-light btn-block"
-            onClick={clearUsers}
-          >
+        {showClear && (
+          <button className="btn btn-light btn-block" onClick={clearUsers}>
             Clear
           </button>
-        }
+        )}
       </div>
     );
   }
 }
 
-export default search;
+export default Search;
