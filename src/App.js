@@ -20,6 +20,7 @@ class App extends React.Component {
     user: {}, //for individual user
     loading: false, //loading will be to tell the user when the data is coming in, so will be using a spinner in place that says "loading..," until the data comes in
     alert: null,
+    repos: [], //users repos
   };
 
   //life cycle method
@@ -65,6 +66,14 @@ class App extends React.Component {
     // console.log(text)
   };
 
+  //get users repos
+  getUserRepos = async (username) => {
+    this.setState({ loading: true });
+    const res = await axios.get(
+      `https://api.github.com/users/${username}/repos?per_page=5&sort=created:asc&client_id=${process.env.REACT_APP_GITHUB_CLIENT_ID}&client_secret=${process.env.REACT_APP_GITHUB_CLIENT_SECRET}`    );
+    this.setState({ repos: res.data, loading: false });
+  };
+
   //Clear users from state
   //empties the array of passed users and resets loading to false
   clearUsers = () => this.setState({ users: [], loading: false });
@@ -86,7 +95,7 @@ class App extends React.Component {
   };
   render() {
     //destructure state
-    const { users, user, loading } = this.state;
+    const { users, user, loading, repos } = this.state;
     return (
       <Router>
         <div>
@@ -117,9 +126,20 @@ class App extends React.Component {
               />
               {/* sinlge component that will route to the about page */}
               <Route exact path="/about" component={About} />
-              <Route exact path ={'/user/:login'} render={props => (
-                <User {...props} getUser={this.getUser} user={user} loading={loading}/>
-              )} />
+              <Route
+                exact
+                path={"/user/:login"}
+                render={(props) => (
+                  <User
+                    {...props}
+                    getUserRepos={this.getUserRepos}
+                    repos={repos}
+                    getUser={this.getUser}
+                    user={user}
+                    loading={loading}
+                  />
+                )}
+              />
             </Switch>
           </div>
         </div>
