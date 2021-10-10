@@ -10,7 +10,6 @@ import Search from "./components/users/Search";
 //3. app js calls the functions search users which is inside of the app js
 //4. finally that is what is console outputting our value
 
-
 class App extends React.Component {
   state = {
     users: [], //stores all the users that come back from res.date --> axios
@@ -42,10 +41,9 @@ class App extends React.Component {
   //   // console.log(res.data)
   // }
 
-  searchUsers = async text => { 
-
+  searchUsers = async (text) => {
     this.setState({ loading: true });
-    
+
     //update endpoint to include text -  q=${text}& diffrent from the above
     const res = await axios.get(
       `https://api.github.com/search/users?q=${text}&client_id=${process.env.REACT_APP_GITHUB_CLIENT_ID}&client_secret=${process.env.REACT_APP_GITHUB_CLIENT_SECRET}`
@@ -55,21 +53,33 @@ class App extends React.Component {
 
     //now that we have all our data and the data is no lo nger loading
     //using setState, reset the loading to false, and fill the users array with the data
-    
+
     //what will need will exist in res.data.items rather than res.data because the end point is diffrent
     this.setState({ users: res.data.items, loading: false });
     // console.log(text)
-  }
+  };
 
+  //Clear users from state
+  //empties the array of passed users and resets loading to false
+  clearUsers = () => this.setState({ users: [], loading: false });
   render() {
+    //destructure state 
+    const {users, loading} = this.state;
     return (
       <div>
         {/* passing title as a prop and custom icon*/}
         <Navbar />
         <div className="container">
           {/* adding props so it can pass values back up rather than down, AKA prop drilling */}
-          <Search searchUsers={this.searchUsers}/>
-          <Users loading={this.state.loading} users={this.state.users} />
+          {/* Clear users is also being sent up from search into app */}
+          {/* Want to conditionally render the clear button, only if there are users on the screen otherwise not, */}
+          {/* show Clear is conditonal prop passed that checks for that */}
+          <Search
+            searchUsers={this.searchUsers}
+            clearUsers={this.clearUsers}
+            showClear={users.length > 0 ? true : false}
+          />
+          <Users loading={loading} users={users} />
         </div>
       </div>
     );

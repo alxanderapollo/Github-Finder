@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import PropTypes from 'prop-types'
+import PropTypes from "prop-types";
 export class search extends Component {
   //this state will hold the text, that will be inputted by the user
   state = {
@@ -7,8 +7,10 @@ export class search extends Component {
   };
 
   static propTypes = {
-    searchUsers: PropTypes.func.isRequired
-  }
+    searchUsers: PropTypes.func.isRequired,
+    clearUsers: PropTypes.func.isRequired,
+    showClear: PropTypes.bool.isRequired,
+  };
   //updates our piece of state that was entered inside of the search box
   //key interpolation
   //since name is a feild in the form, it takes name
@@ -18,7 +20,6 @@ export class search extends Component {
   //---> what we want to do is pass up this.state.text up to the app component
   //so that it can be used as a search param with the github api
 
-
   //for when the user submits
   onSubmit = (e) => {
     e.preventDefault();
@@ -26,10 +27,12 @@ export class search extends Component {
     //function to pass up the query to app component
     this.props.searchUsers(this.state.text);
     //wipe the state with the the current query
-    this.setState({text: ''});
+    this.setState({ text: "" });
   };
-  
+
   render() {
+    // deconstruct the props
+    const {clearUsers, showClear } = this.props;
     return (
       <div>
         <form onSubmit={this.onSubmit} className="form">
@@ -42,6 +45,16 @@ export class search extends Component {
           />
           <input type="submit" className="btn btn-dark btn-block" />
         </form>
+        {/* showClear is prop that is passed as a bool, if its true, then render the button */}
+        {/* otherwise dont render this is passed from the app component class */}
+        {showClear && 
+          <button
+            className="btn btn-light btn-block"
+            onClick={clearUsers}
+          >
+            Clear
+          </button>
+        }
       </div>
     );
   }
