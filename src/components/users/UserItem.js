@@ -1,5 +1,6 @@
 import React from "react";
 
+import {Link} from "react-router-dom"
 //import prop types for user item
 import PropTypes from "prop-types";
 //destructering the props instead of having this --->const {login,avatar_Url,html_url} = props.user;
@@ -26,9 +27,9 @@ const UserItem = ({ user: { login, avatar_url, html_url } }) => {
       <h3>{login}</h3>
 
       <div>
-        <a href={html_url} className="btn btn-dark btn-sm my-1">
+        <Link to={`/user/${login}`} className="btn btn-dark btn-sm my-1">
           More
-        </a>
+        </Link>
       </div>
     </div>
   );

@@ -11,7 +11,7 @@ const Navbar = ({ icon, title }) => {
   // For the nav bar we can't use a tags because the information
   //on the website is erased from page to page, instead we use Link which is a non default 
   //library which is why it has curly braces around it like this {LINK}
-  //notice that link uses to instead of href
+  //notice that link uses to instead of href, the state stays in tact
 
   return (
     <nav className="navbar bg-primary">

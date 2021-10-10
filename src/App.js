@@ -3,10 +3,11 @@ import "./App.css";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import Navbar from "./components/layout/Navbar";
 import Users from "./components/users/Users";
+import User from "./components/users/User";
 import axios from "axios";
-import React, {Fragment} from "react";
+import React, { Fragment } from "react";
 import Search from "./components/users/Search";
-import About from './components/pages/About'
+import About from "./components/pages/About";
 import Alert from "./components/layout/Alert";
 //1. once the form is submitted it calls onSubmit() in the component
 //.2 onsubmit calls on a prop function called search users (inside of the app Component) and passes in the text
@@ -16,6 +17,7 @@ import Alert from "./components/layout/Alert";
 class App extends React.Component {
   state = {
     users: [], //stores all the users that come back from res.date --> axios
+    user: {}, //for individual user
     loading: false, //loading will be to tell the user when the data is coming in, so will be using a spinner in place that says "loading..," until the data comes in
     alert: null,
   };
@@ -73,9 +75,18 @@ class App extends React.Component {
     //time out the alert otherwise it will stick to the screen indefinitly
     setTimeout(() => this.setState({ alert: null }), 5000);
   };
+
+  //get user github user
+  getUser = async (username) => {
+    this.setState({ loading: true });
+    const res = await axios.get(
+      `https://api.github.com/users/${username}?client_id=${process.env.REACT_APP_GITHUB_CLIENT_ID}&client_secret=${process.env.REACT_APP_GITHUB_CLIENT_SECRET}`
+    );
+    this.setState({ user: res.data, loading: false });
+  };
   render() {
     //destructure state
-    const { users, loading } = this.state;
+    const { users, user, loading } = this.state;
     return (
       <Router>
         <div>
@@ -105,7 +116,10 @@ class App extends React.Component {
                 )}
               />
               {/* sinlge component that will route to the about page */}
-              <Route exact path ='/about'component={About}/>
+              <Route exact path="/about" component={About} />
+              <Route exact path ={'/user/:login'} render={props => (
+                <User {...props} getUser={this.getUser} user={user} loading={loading}/>
+              )} />
             </Switch>
           </div>
         </div>
